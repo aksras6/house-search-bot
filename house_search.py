@@ -21,10 +21,10 @@ import requests
 # ── SEARCH CRITERIA — edit these to match what you're looking for ──────────
 SEARCHES = [
     {
-        "location": "sydney-nsw-2000",   # suburb-state-postcode slug
-        "min_price": 800000,
-        "max_price": 1200000,
-        "min_bedrooms": 3,
+        "location": "norwest-nsw-2153",   # suburb-state-postcode slug
+        "min_price": 600000,
+        "max_price": 700000,
+        "min_bedrooms": 2,
         "min_bathrooms": 2,
         "property_type": "house",
     },
