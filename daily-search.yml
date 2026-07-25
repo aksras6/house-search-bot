@@ -1,0 +1,40 @@
+name: Daily House Search
+
+on:
+  schedule:
+    # Runs at 22:00 UTC = 08:00 AEST / 09:00 AEDT (adjust as needed)
+    - cron: '0 22 * * *'
+  workflow_dispatch:  # allows manual "Run workflow" button in GitHub UI
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run house search
+        env:
+          PARSE_API_KEY: ${{ secrets.PARSE_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python house_search.py
+
+      - name: Commit updated seen_listings.json
+        run: |
+          git config user.name "house-search-bot"
+          git config user.email "actions@github.com"
+          git add seen_listings.json
+          git diff --staged --quiet || git commit -m "Update seen listings [skip ci]"
+          git push
